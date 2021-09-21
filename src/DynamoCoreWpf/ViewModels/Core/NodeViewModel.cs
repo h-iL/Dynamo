@@ -625,6 +625,15 @@ namespace Dynamo.ViewModels
             }
         }
 
+        public override bool IsCollapsed
+        {
+            get => base.IsCollapsed;
+            set
+            {
+                base.IsCollapsed = value;
+            }
+        }
+
         #endregion
 
         #region events
@@ -670,6 +679,15 @@ namespace Dynamo.ViewModels
         internal void OnSelected(object sender, EventArgs e)
         {
             Selected?.Invoke(this, e);
+        }
+
+        /// <summary>
+        /// Event to determine when Node is removed
+        /// </summary>
+        internal event EventHandler Removed;
+        internal void OnRemoved(object sender, EventArgs e)
+        {
+            Removed?.Invoke(this, e);
         }
 
         #endregion
@@ -1092,6 +1110,7 @@ namespace Dynamo.ViewModels
         {
             var command = new DynamoModel.DeleteModelCommand(nodeLogic.GUID);
             DynamoViewModel.ExecuteCommand(command);
+            OnRemoved(this, EventArgs.Empty);
         }
 
         private void SetLacingType(object param)
